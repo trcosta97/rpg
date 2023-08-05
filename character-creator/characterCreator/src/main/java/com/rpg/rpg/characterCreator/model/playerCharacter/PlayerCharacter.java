@@ -1,7 +1,8 @@
 package com.rpg.rpg.characterCreator.model.playerCharacter;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.rpg.rpg.characterCreator.model.CharacterStats.CharacterStats;
+import com.rpg.rpg.characterCreator.model.characterStats.CharacterStats;
 import com.rpg.rpg.characterCreator.model.player.Player;
 import jakarta.persistence.*;
 
@@ -23,11 +24,11 @@ public class PlayerCharacter {
     @Column(name = "character-age", nullable = false,scale = 4)
     private int characterAge;
     @OneToOne
-    @JsonManagedReference
-    @Column(name = "stats_id", nullable = false, unique = true, updatable = false)
+    @PrimaryKeyJoinColumn(name = "stats_id")
     private CharacterStats characterStats;
-    @OneToMany
-    @Column(name = "player_id", nullable = false)
+    @ManyToOne
+    @JsonManagedReference
+    @JoinColumn(name = "player_id", nullable = false)
     private Player player;
     @Enumerated(EnumType.STRING)
     @Column(name = "character_race", nullable = false)
@@ -35,7 +36,6 @@ public class PlayerCharacter {
     @Column(name = "character_status",  columnDefinition = "BIT(1) DEFAULT 1")
     private Boolean status;
     @Column(name = "character_creation")
-    @Temporal(TemporalType.DATE)
     private LocalDateTime creationDate;
 
     @PrePersist

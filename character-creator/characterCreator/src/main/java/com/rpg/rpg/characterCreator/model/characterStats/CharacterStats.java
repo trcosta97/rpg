@@ -1,5 +1,8 @@
-package com.rpg.rpg.characterCreator.model.CharacterStats;
+package com.rpg.rpg.characterCreator.model.characterStats;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.rpg.rpg.characterCreator.model.playerCharacter.PlayerCharacter;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,6 +25,12 @@ public class CharacterStats {
     private int charisma;
     @Column(name = "luck", nullable = false, scale = 3)
     private int luck;
+    @PrimaryKeyJoinColumn(name = "stats-id")
+    @OneToOne(mappedBy = "characterStats")
+
+    private PlayerCharacter playerCharacter;
+
+
 
 
 }
