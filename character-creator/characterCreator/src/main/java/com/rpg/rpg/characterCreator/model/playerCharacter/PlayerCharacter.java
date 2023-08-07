@@ -5,23 +5,31 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rpg.rpg.characterCreator.model.characterStats.CharacterStats;
 import com.rpg.rpg.characterCreator.model.player.Player;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "player-character")
+@Table(name = "player_character")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PlayerCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "character_id")
+    @Column(name = "id")
     private Long characterId;
-    @Column(name = "character-name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String characterName;
-    @Column(name = "character-gender", nullable = false)
+    @Column(name = "gender", nullable = false)
     @Enumerated(EnumType.STRING)
     private CharacterGender characterGender;
-    @Column(name = "character-age", nullable = false,scale = 4)
+    @Column(name = "age", nullable = false,scale = 4)
     private int characterAge;
     @OneToOne
     @PrimaryKeyJoinColumn(name = "stats_id")
@@ -31,16 +39,29 @@ public class PlayerCharacter {
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
     @Enumerated(EnumType.STRING)
-    @Column(name = "character_race", nullable = false)
+    @Column(name = "race", nullable = false)
     private CharacterRace race;
-    @Column(name = "character_status",  columnDefinition = "BIT(1) DEFAULT 1")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "class", nullable = false)
+    private ClassType classType;
+    @Column(name = "status",  columnDefinition = "BIT(1) DEFAULT 1")
     private Boolean status;
-    @Column(name = "character_creation")
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
+
+    public PlayerCharacter(AddCharacterDTO data) {
+        this.characterName = data.characterName();
+        this.characterGender = data.characterGender();
+        this.characterAge = data.characterAge();
+        this.classType = data.classType();
+        this.race = data.race();
+    }
 
     @PrePersist
     protected void prePersist(){
         this.creationDate = LocalDateTime.now();
         this.status = true;
+        this.characterStats = new CharacterStats();
+
     }
 }

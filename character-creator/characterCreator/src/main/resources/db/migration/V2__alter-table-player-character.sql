@@ -1,0 +1,3 @@
+ALTER TABLE player_character
+ADD COLUMN stats_id BIGINT,
+ADD CONSTRAINT fk_stats FOREIGN KEY (stats_id) REFERENCES stats(id) ON DELETE CASCADE;

@@ -1,17 +1,16 @@
 package com.rpg.rpg.characterCreator.model.characterStats;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rpg.rpg.characterCreator.model.playerCharacter.PlayerCharacter;
 import jakarta.persistence.*;
 
+import java.util.Random;
+
 @Entity
-@Table(name = "character-stats")
+@Table(name = "stats")
 public class CharacterStats {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stats-id")
+    @Column(name = "id")
     private Long statsId;
     @Column(name = "intelligence", nullable = false, scale = 3)
     private int intelligence;
@@ -25,12 +24,23 @@ public class CharacterStats {
     private int charisma;
     @Column(name = "luck", nullable = false, scale = 3)
     private int luck;
-    @PrimaryKeyJoinColumn(name = "stats-id")
+    @PrimaryKeyJoinColumn(name = "character_id")
     @OneToOne(mappedBy = "characterStats")
-
     private PlayerCharacter playerCharacter;
 
+    public int generateRandomInt(){
+        Random random = new Random();
+        return random.nextInt(21);
+    }
 
-
+    @PrePersist
+    public void randomizeStat(){
+        this.charisma = generateRandomInt();
+        this.constitution = generateRandomInt();
+        this.luck = generateRandomInt();
+        this.dexterity = generateRandomInt();
+        this.strength = generateRandomInt();
+        this.intelligence = generateRandomInt();
+    }
 
 }
