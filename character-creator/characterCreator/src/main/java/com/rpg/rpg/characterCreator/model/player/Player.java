@@ -1,12 +1,10 @@
 package com.rpg.rpg.characterCreator.model.player;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rpg.rpg.characterCreator.model.playerCharacter.PlayerCharacter;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +17,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "playerId")
+@JsonIgnoreProperties("player")
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,15 +35,20 @@ public class Player {
     private Boolean status;
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         this.signDate = LocalDateTime.now();
         this.status = true;
+
+        for (PlayerCharacter character : playerCharactersList) {
+            character.setPlayer(this);
+        }
     }
 
-    public void addCharacter(PlayerCharacter character){
+    public void addNewCharacter(PlayerCharacter character) {
         character.setPlayer(this);
         this.playerCharactersList.add(character);
     }
+
 
     public void deactivate(){
         this.status = false;

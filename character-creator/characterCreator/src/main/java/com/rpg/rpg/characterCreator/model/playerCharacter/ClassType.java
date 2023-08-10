@@ -10,5 +10,6 @@ public enum ClassType {
     ROGUE,
     SORCERER,
     PALADIN,
+    THIEF,
     ORC
 }

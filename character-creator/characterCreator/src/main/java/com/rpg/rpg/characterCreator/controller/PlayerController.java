@@ -1,5 +1,6 @@
 package com.rpg.rpg.characterCreator.controller;
 
+import com.rpg.rpg.characterCreator.model.characterStats.CharacterStats;
 import com.rpg.rpg.characterCreator.model.player.Player;
 import com.rpg.rpg.characterCreator.model.player.PostUserDTO;
 import com.rpg.rpg.characterCreator.model.playerCharacter.AddCharacterDTO;
@@ -9,6 +10,7 @@ import com.rpg.rpg.characterCreator.service.PlayerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-
 public class PlayerController {
 
     @Autowired
@@ -36,14 +37,13 @@ public class PlayerController {
     }
 
     @PostMapping("/player/{id}")
-    public ResponseEntity<List<PlayerCharacter>> addPlayerCharacter(@RequestBody @Valid AddCharacterDTO data, @PathVariable Long id){
-        var playerCharacter = new PlayerCharacter(data);
-        var player = playerService.getById(id);
+    public ResponseEntity<List<PlayerCharacter>> addCharacter(@RequestBody @Valid AddCharacterDTO data, @PathVariable Long id){
+        PlayerCharacter newPlayerCharacter = new PlayerCharacter(data);
 
-        player.addCharacter(playerCharacter);
-        playerCharacterService.save(playerCharacter);
-        playerService.save(player);
+        var player = playerService.getById(id);
+        playerService.addCharacter(id,newPlayerCharacter);
 
         return ResponseEntity.ok(player.getPlayerCharactersList());
     }
+
 }

@@ -1,6 +1,5 @@
 package com.rpg.rpg.characterCreator.model.playerCharacter;
 
-import com.rpg.rpg.characterCreator.model.characterStats.CharacterStats;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,5 +16,4 @@ public record AddCharacterDTO(
         int characterAge
 
 
-) {
-}
+) { }

@@ -1,14 +1,12 @@
 package com.rpg.rpg.characterCreator.model.playerCharacter;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rpg.rpg.characterCreator.model.characterStats.CharacterStats;
 import com.rpg.rpg.characterCreator.model.player.Player;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.time.LocalDateTime;
@@ -19,6 +17,8 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "characterId")
+@JsonIgnoreProperties("playerCharactersList")
 public class PlayerCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +31,9 @@ public class PlayerCharacter {
     private CharacterGender characterGender;
     @Column(name = "age", nullable = false,scale = 4)
     private int characterAge;
-    @OneToOne
-    @PrimaryKeyJoinColumn(name = "stats_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stats_id")
+    @JsonBackReference
     private CharacterStats characterStats;
     @ManyToOne
     @JsonManagedReference
@@ -63,5 +64,7 @@ public class PlayerCharacter {
         this.status = true;
         this.characterStats = new CharacterStats();
 
+
     }
+
 }
